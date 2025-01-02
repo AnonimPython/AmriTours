@@ -1,0 +1,38 @@
+определение локации
+
+import reflex as rx
+import requests
+
+class LocationState(rx.State):
+    country: str = ""
+    city: str = ""
+    error: str = ""
+
+    def get_location(self):
+        """Получаем местоположение через IP."""
+        try:
+            response = requests.get('http://ip-api.com/json/')
+            data = response.json()
+            
+            if data['status'] == 'success':
+                self.country = data['country']
+                self.city = data['city']
+            else:
+                self.error = "Не удалось определить местоположение"
+        except Exception as e:
+            self.error = f"Ошибка: {str(e)}"
+
+def index():
+    return rx.vstack(
+        rx.button(
+            "Определить местоположение",
+            on_click=LocationState.get_location,
+        ),
+        rx.text(f"Страна: {LocationState.country}"),
+        rx.text(f"Город: {LocationState.city}"), 
+        rx.text(LocationState.error, color="red"),
+        spacing="4",
+    )
+
+app = rx.App()
+app.add_page(index)
