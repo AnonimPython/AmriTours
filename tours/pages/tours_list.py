@@ -104,7 +104,6 @@ def ad_card(
 def tour_card(
     src_img: str,
     text: str,
-    text_color: str,
     url_tour: str,
     price: str,
     stars: str,
@@ -140,7 +139,7 @@ def tour_card(
             
             rx.text(
                 text,
-                color=text_color,
+                color="#fff",
                 position="absolute",
                 top="140px",
                 left="10px",
@@ -168,7 +167,7 @@ def tour_card(
                         rx.icon(tag="star",color="yellow"),
                         rx.text(
                             stars,
-                            color=text_color,
+                            color="#fff",
                             weight="bold",
                             size="4",
                         ),
@@ -188,7 +187,7 @@ def tour_card(
         url=url_tour
     )
 
-def hello() -> rx.Component:
+def tours_list() -> rx.Component:
     return rx.box(
         rx.mobile_only(
             #page
@@ -257,7 +256,7 @@ def hello() -> rx.Component:
                             # hotel
                             filter_card(
                                 icon="bed-double",
-                                text="Hotels",
+                                text="Tours",
                                 bgcolor="#fff7ee",
                                 icon_color="#fb8f1d",
                                 id_box="hotel-id",
@@ -407,7 +406,6 @@ def hello() -> rx.Component:
                     tour_card(
                         src_img="https://cdn.pegasys.pegast.com/web/ge/cms/Countries/Egypt/About/1.jpg",
                         text="Egypt",
-                        text_color="#fff",
                         url_tour="#",
                         price="1000$",
                         stars="4",
@@ -415,7 +413,6 @@ def hello() -> rx.Component:
                     tour_card(
                         src_img="https://cdn.pegasys.pegast.com/web/ge/cms/Countries/Egypt/About/1.jpg",
                         text="Egypt",
-                        text_color="#fff",
                         url_tour="#",
                         price="1000$",
                         stars="4",

@@ -4,3 +4,6 @@ assets/external/
 *.db
 *.py[cod]
 .env
+/alembic
+alembic.ini
+test.txt

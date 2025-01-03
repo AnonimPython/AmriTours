@@ -1,4 +1,3 @@
-'''State file for saving userdata from DB'''
 import reflex as rx
 
 

@@ -71,7 +71,7 @@ class SelectCountry(rx.State):
         self.value = value
         print("Change value", self.value)
 
-        
+
 
 class RangeSliderState(rx.State):
     value_start: int = 25
@@ -154,7 +154,7 @@ def hotels() -> rx.Component:
         rx.mobile_only(
             rx.container(
                 
-                topbar("Hotels"),
+                topbar("Tours"),
                 
                 # filter
                 rx.box(
@@ -322,7 +322,6 @@ def hotels() -> rx.Component:
                     tour_card(
                         src_img="https://cdn.pegasys.pegast.com/web/ge/cms/Countries/Egypt/About/1.jpg",
                         text="Egypt",
-                        text_color="#fff",
                         url_tour="#",
                         price="$1000",
                         stars="4",
@@ -330,7 +329,6 @@ def hotels() -> rx.Component:
                     tour_card(
                         src_img="https://cdnn21.img.ria.ru/images/07e8/01/0c/1920984295_0:114:3072:1842_1920x0_80_0_0_ff14c51016cb39e6a1953bd1c6671de4.jpg",
                         text="Cairo",
-                        text_color="#fff",
                         url_tour="#",
                         price="$700",
                         stars="4",

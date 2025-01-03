@@ -36,3 +36,72 @@ def index():
 
 app = rx.App()
 app.add_page(index)
+
+
+
+
+# Сбор всех данных из полей в hotels.py
+class CollectAllState(rx.State):
+    # Variables to store collected data
+    selected_country: str = ""
+    price_range_start: int = 0 
+    price_range_end: int = 0
+    selected_hotel_types: list[str] = []
+    selected_stars: list[str] = []
+    selected_meal_plans: list[str] = []
+
+    @rx.event
+    async def collect_all_data(self):
+        """Collect all data from other states when button is clicked."""
+        # Get data from SelectCountry
+        select_state = await self.get_state(SelectCountry)
+        self.selected_country = select_state.value
+
+        # Get data from RangeSliderState 
+        range_state = await self.get_state(RangeSliderState)
+        self.price_range_start = range_state.value_start
+        self.price_range_end = range_state.value_end
+
+        # Get data from TypeOfHotel
+        hotel_state = await self.get_state(TypeOfHotel)
+        self.selected_hotel_types = [
+            hotel_type for hotel_type, is_selected 
+            in hotel_state.choices.items() 
+            if is_selected
+        ]
+
+        # Get data from Stars
+        stars_state = await self.get_state(Stars) 
+        self.selected_stars = [
+            star for star, is_selected 
+            in stars_state.choices.items()
+            if is_selected
+        ]
+
+        # Get data from MealPlan
+        meal_state = await self.get_state(MealPlan)
+        self.selected_meal_plans = [
+            plan for plan, is_selected 
+            in meal_state.choices.items()
+            if is_selected
+        ]
+
+        # Print collected data for verification
+        print("Collected Data:")
+        print(f"Country: {self.selected_country}")
+        print(f"Price Range: {self.price_range_start} - {self.price_range_end}")
+        print(f"Hotel Types: {self.selected_hotel_types}")
+        print(f"Stars: {self.selected_stars}")
+        print(f"Meal Plans: {self.selected_meal_plans}")
+Then you can use it in your button like this:
+
+python
+rx.alert_dialog.action(
+    rx.button(
+        "Access",
+        variant="soft",
+        color_scheme="green", 
+        radius="full",
+        on_click=CollectAllState.collect_all_data
+    ),
+)
