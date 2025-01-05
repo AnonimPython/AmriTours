@@ -22,33 +22,41 @@ DARK_LAZURE = "#012d40"
 from sqlmodel import select,or_
 from ..database import Tours
 
+import asyncio
+
 class ToursDBState(rx.State):
     # Определяем переменную состояния для хранения списка туров
     tours: list[Tours] = []
+    is_loading: bool = False
 
+
+# ! TEST
     @rx.event
-    def get_tours(self) -> list[Tours]:
-        """Получение всех туров из базы данных."""
-        
-        with rx.session() as session:
-            # Создаем SQL запрос для выбора всех записей из таблицы Tours
-            query = select(Tours).where(
-                or_(
-                Tours.stars == 4,
-                Tours.price == 123,
-                )
-            )
+    def get_regular_tours(self) -> list[Tours]:
+        try:
+            with rx.session() as session:
+                query = select(Tours).where(Tours.stars <= 4)
+                self.tours = session.exec(query).all()
+        except Exception as e:
+            print(f"[WARNING] Error getting tours from BD (get_regular_tours): {e}")
+        # Для отладки выводим запрос и результат
+        print(f"[INFO] SQL запрос: {query}")  # Выводим SQL запрос
+        print(f"[INFO] All Data: {self.tours}")  # Выводим полученные данные
             
-            # Выполняем запрос и получаем все результаты
-            # session.exec() выполняет запрос
-            # .all() возвращает все найденные записи в виде списка
-            self.tours = session.exec(query).all()
             
-            # Для отладки выводим запрос и результат
-            print(f"SQL запрос: {query}")  # Выводим SQL запрос
-            print(f"All Data: {self.tours}")  # Выводим полученные данные
+    @rx.event
+    async def get_beach_tours(self):
+        try:
+            with rx.session() as session:
+                query = select(Tours).where(Tours.price == 123)
+                self.tours = session.exec(query).all()
+        except Exception as e:
+            print(f"[WARNING] Error getting tours from BD (get_beach_tours): {e}")
+           
             
-            """
+            
+"""
+FOR DB SESSION
             with rx.session() as session:
             query = select(Tours)
             tours = session.exec(query).all()
@@ -73,7 +81,7 @@ class ToursDBState(rx.State):
 rx.text(f"Hello {UserName.username}"),
 rx.text(f"Hello {UserName.mail}"),
 '''
-
+# ! Make moduls in UI folder
 def filter_card(
         icon: str,
         text: str,
@@ -406,7 +414,7 @@ def tours_list() -> rx.Component:
                                     rx.text("Tours"),
                                     background=LAZURE,
                                     border_radius="30px",
-                                    # margin_right="10px",
+                                    on_click=ToursDBState.get_regular_tours
                                 ),
                                 rx.button(
                                     rx.icon(tag="tree-palm"),
@@ -414,6 +422,7 @@ def tours_list() -> rx.Component:
                                     background="#f0f1f5",
                                     color=DARK_LAZURE,
                                     border_radius="30px",
+                                    on_click=ToursDBState.get_beach_tours
                                     
                                 ),
                                 rx.button(
@@ -451,27 +460,24 @@ def tours_list() -> rx.Component:
                 ),
                 # tours
                 rx.box(
-                    #card of tour
-                    tour_card(
-                        src_img="https://cdn.pegasys.pegast.com/web/ge/cms/Countries/Egypt/About/1.jpg",
-                        text="Egypt",
-                        url_tour="#",
-                        price="1000$",
-                        stars="4",
-                    ),
-                    tour_card(
-                        src_img="https://cdn.pegasys.pegast.com/web/ge/cms/Countries/Egypt/About/1.jpg",
-                        text="Egypt",
-                        url_tour="#",
-                        price="1000$",
-                        stars="4",
+                    rx.cond(
+                        ToursDBState.is_loading,
+                        rx.center(rx.spinner()),
+                        rx.foreach(
+                            ToursDBState.tours,
+                            lambda tour: tour_card(
+                                src_img=tour.src_img,
+                                text=tour.text,
+                                url_tour=tour.url_tour,
+                                price=tour.price,
+                                stars=tour.stars
+                            )
+                        )
                     ),
                     margin_top="30px",
+                    on_mount=ToursDBState.get_regular_tours  # Можете выбрать, какая функция будет вызвана при загрузке
                 ),
-            ),
-            
-           
-            
+            ), 
             # navbar()
             
             ),

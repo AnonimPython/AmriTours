@@ -51,9 +51,14 @@ def profile_page() -> rx.Component:
 def hotels_page() -> rx.Component:
     return hotels()
 
-@rx.page(route="/add_tour", title="testing_db")
+@rx.page(route="/add_tour", title="add_tour")
 def add_tour_page() -> rx.Component:
     return add_tour()
+
+
+# def api_test(item_id: int):
+#     return {"my_result": item_id}
+# app.api.add_api_route("/items/{item_id}", api_test)
 
 
 app = rx.App(
