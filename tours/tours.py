@@ -4,7 +4,7 @@ from rxconfig import config
 
 
 #? https://ip-api.com/ for location
-# pages
+# frontend pages
 from .pages.tours_list import tours_list
 from .pages.profile import profile
 from .pages.hotels import hotels

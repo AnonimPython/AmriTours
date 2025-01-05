@@ -19,6 +19,56 @@ RED = "#ff414d"
 LAZURE = "#19a6b6"
 DARK_LAZURE = "#012d40"
 
+from sqlmodel import select,or_
+from ..database import Tours
+
+class ToursDBState(rx.State):
+    # Определяем переменную состояния для хранения списка туров
+    tours: list[Tours] = []
+
+    @rx.event
+    def get_tours(self) -> list[Tours]:
+        """Получение всех туров из базы данных."""
+        
+        with rx.session() as session:
+            # Создаем SQL запрос для выбора всех записей из таблицы Tours
+            query = select(Tours).where(
+                or_(
+                Tours.stars == 4,
+                Tours.price == 123,
+                )
+            )
+            
+            # Выполняем запрос и получаем все результаты
+            # session.exec() выполняет запрос
+            # .all() возвращает все найденные записи в виде списка
+            self.tours = session.exec(query).all()
+            
+            # Для отладки выводим запрос и результат
+            print(f"SQL запрос: {query}")  # Выводим SQL запрос
+            print(f"All Data: {self.tours}")  # Выводим полученные данные
+            
+            """
+            with rx.session() as session:
+            query = select(Tours)
+            tours = session.exec(query).all()
+            # Convert to list of dictionaries
+            self.tours = [
+                {
+                    "src_img": tour.src_img,
+                    "text": tour.text,
+                    "url_tour": tour.url_tour, 
+                    "price": tour.price,
+                    "stars": tour.stars
+                }
+                for tour in tours
+            ]
+            print(f'''
+                  \n{self.tours}\n
+            ''')
+            """
+
+
 '''
 rx.text(f"Hello {UserName.username}"),
 rx.text(f"Hello {UserName.mail}"),
@@ -136,7 +186,6 @@ def tour_card(
                 margin_top="30px",  
                 
             ),
-            
             rx.text(
                 text,
                 color="#fff",
@@ -213,7 +262,7 @@ def tours_list() -> rx.Component:
                     ),
                     style={"align-items": "center","align-self": "center","padding":"10px 0px"},
                 ),
-                #body
+                #header
                 rx.box(
                     rx.text("Discover your next trip and desination",size="8",weight="bold"),
                     
