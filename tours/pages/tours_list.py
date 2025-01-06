@@ -1,7 +1,6 @@
 import reflex as rx
 
 from rxconfig import config
-from ..ui.navbar import navbar
 from ..state import UserData
 
 class State(rx.State):
@@ -30,7 +29,6 @@ class ToursDBState(rx.State):
     is_loading: bool = False
 
 
-# ! TEST
     @rx.event
     def get_regular_tours(self) -> list[Tours]:
         try:
@@ -39,7 +37,7 @@ class ToursDBState(rx.State):
                 self.tours = session.exec(query).all()
         except Exception as e:
             print(f"[WARNING] Error getting tours from BD (get_regular_tours): {e}")
-        # Для отладки выводим запрос и результат
+        # test
         print(f"\033[34m[INFO] SQL запрос: {query}")  # Выводим SQL запрос
         print(f"[INFO] All Data: {self.tours}")  # Выводим полученные данные
             
@@ -407,13 +405,12 @@ def tours_list() -> rx.Component:
                         rx.scroll_area(
                             rx.flex(
                                 # ! when your click on button, BG color will change
-                                
-                                # * trie use "Tabs"
                                 rx.button(
                                     rx.icon(tag="tram-front"),
                                     rx.text("Tours"),
                                     background=LAZURE,
                                     border_radius="30px",
+                                    # * tour
                                     on_click=ToursDBState.get_regular_tours
                                 ),
                                 rx.button(
@@ -422,6 +419,7 @@ def tours_list() -> rx.Component:
                                     background="#f0f1f5",
                                     color=DARK_LAZURE,
                                     border_radius="30px",
+                                    # * beach
                                     on_click=ToursDBState.get_beach_tours
                                     
                                 ),
@@ -431,6 +429,7 @@ def tours_list() -> rx.Component:
                                     background="#f0f1f5",
                                     color=DARK_LAZURE,
                                     border_radius="30px",
+                                    # * price down
                                     
                                 ),
                                 rx.button(
@@ -439,6 +438,7 @@ def tours_list() -> rx.Component:
                                     background="#f0f1f5",
                                     color=DARK_LAZURE,
                                     border_radius="30px",
+                                    # * price up
                                     
                                 ),
                                 rx.button(
@@ -447,6 +447,7 @@ def tours_list() -> rx.Component:
                                     background="#f0f1f5",
                                     color=DARK_LAZURE,
                                     border_radius="30px",
+                                    # * popular
                                     
                                 ),
                                 gap="10px",
@@ -475,7 +476,7 @@ def tours_list() -> rx.Component:
                         )
                     ),
                     margin_top="30px",
-                    on_mount=ToursDBState.get_regular_tours  # Можете выбрать, какая функция будет вызвана при загрузке
+                    on_mount=ToursDBState.get_regular_tours  #* call function when page is loaded
                 ),
             ), 
             # navbar()

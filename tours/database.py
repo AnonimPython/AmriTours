@@ -13,11 +13,12 @@ class RegisterUser(rx.Model, table=True):
 #* TOURS
 class Tours(rx.Model, table=True):
     id: Optional[int] = Field(default=None, primary_key=True)
-    src_img: str
-    text: str
-    url_tour: str
-    price: str
-    stars: str
+    src_img: str = Field(default="")
+    text: str = Field(default="")
+    url_tour: str = Field(default="")
+    price: int = Field(default=0)
+    stars: int = Field(default=0)
+    popular: bool = Field(default=False)
     # ! need add checkbox for "Sales" and after tap on , adding new fields to add fresh price
     
     

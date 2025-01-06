@@ -19,23 +19,24 @@ from .backend.add_tour import add_tour
 from .state import UserData
 
 
+
   
 # color pallete states
 GRAY = "#daecf2"
 RED = "#ff414d"
 LAZURE = "#19a6b6"
 DARK_LAZURE = "#012d40"
-
-@rx.page(route="/", title="Index")
+#*                               in state.py fuction check LocalStorage, if is null -> redirect to register page
+@rx.page(route="/", title="Index", on_load=UserData.check_auth)
 def index_page() -> rx.Component:
     return index()
     
-@rx.page(route="/register", title="Register")
+@rx.page(route="/register", title="Register", on_load=UserData.check_auth)
 def register_page() -> rx.Component:
     return register()
 
-
-@rx.page(route="/login", title="Login")
+# ! for test LocalStorage filling username and mail
+@rx.page(route="/login", title="Login", on_load=UserData.check_auth)
 def login_page() -> rx.Component:
     return login()
 

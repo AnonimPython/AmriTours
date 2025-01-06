@@ -40,7 +40,7 @@ class Register(rx.State):
                 session.commit()
                 
             # Clear form and redirect
-            return rx.redirect("/login")
+            return rx.redirect("/tours")
             
         except Exception as e:
             return rx.toast.error(str(e))
