@@ -40,7 +40,7 @@ class ToursDBState(rx.State):
         except Exception as e:
             print(f"[WARNING] Error getting tours from BD (get_regular_tours): {e}")
         # Для отладки выводим запрос и результат
-        print(f"[INFO] SQL запрос: {query}")  # Выводим SQL запрос
+        print(f"\033[34m[INFO] SQL запрос: {query}")  # Выводим SQL запрос
         print(f"[INFO] All Data: {self.tours}")  # Выводим полученные данные
             
             
