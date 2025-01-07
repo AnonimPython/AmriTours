@@ -6,6 +6,7 @@ from rxconfig import config
 #? https://ip-api.com/ for location
 # frontend pages
 from .pages.tours_list import tours_list
+from .pages.tour_details import tour_detail
 from .pages.profile import profile
 from .pages.hotels import hotels
 from .pages.register import register
@@ -15,11 +16,9 @@ from .pages.index import index
 #backend pages
 from .backend.add_tour import add_tour
 
-# state data|variables
+# state data|DB data
 from .state import UserData
-
-
-
+            
   
 # color pallete states
 GRAY = "#daecf2"
@@ -57,6 +56,11 @@ def add_tour_page() -> rx.Component:
     return add_tour()
 
 
+@rx.page(route="/tour/[id]")
+def tour_detail_page():
+    return tour_detail()
+
+
 # def api_test(item_id: int):
 #     return {"my_result": item_id}
 # app.api.add_api_route("/items/{item_id}", api_test)
@@ -72,3 +76,4 @@ app = rx.App(
     )
 )
 # app.add_page(index)
+# app.add_page(tour_detail)

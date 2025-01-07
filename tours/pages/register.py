@@ -85,6 +85,7 @@ def register() -> rx.Component:
                                 rx.input.slot(
                                     rx.icon(tag="user"),
                                 ),
+                                #! max 12 simbols
                                 name="username",
                                 placeholder="Username",
                                 radius="large",

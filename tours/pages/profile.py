@@ -8,8 +8,14 @@ from ..ui.topbar import topbar
 
 from ..state import UserData
 
+from reflex.style import set_color_mode, color_mode
+from sqlmodel import select,or_
+from ..database import Tickets
+
+
 #* BACKEND
-from ..backend.components.terminal_notofication import terminal_info
+from ..backend.components.terminal_notofication import terminal_info,terminal_warning
+
 
 
 class State(rx.State):
@@ -19,6 +25,39 @@ class State(rx.State):
 #     def login(self):
 #         print(f"User info - Name: {UserData.username}, Age: {UserData.mail}")
 
+#pragma mark - 123
+
+class SendSupport(rx.State):
+    form_data: dict
+    
+    
+    
+    @rx.event
+    def handle_submit(self, form_data: dict):
+        """Handle the form submit."""
+        self.form_data = form_data["support_message"]
+        
+        if not self.form_data == "":
+            terminal_info(f"[INFO] Support message: {self.form_data}")
+            # connect DB
+            try:
+                with rx.session() as session:
+                    new_ticket = Tickets(
+                        # user_id=UserData.id,
+                        text=self.form_data,
+                    )
+                    session.add(new_ticket)
+                    session.commit()
+                    session.refresh(new_ticket)
+                    terminal_info(f"[INFO] Ticket added to DB")
+            except Exception as e:
+                terminal_warning(f"[WARNING] Error getting tickets from BD (SendSupport): {e}")
+                
+            return rx.toast.success(f"Your support message has been submitted")
+            
+        else:
+            terminal_warning(f"[WARNING] Error adding ticket to DB (SendSupport): {e}")
+            return rx.toast.warning(f"Support massage is empty or invalid")
 
 
 class ChangeTheme(rx.State):
@@ -112,7 +151,10 @@ DARK_LAZURE = "#012d40"
 def segment(text: str) -> rx.Component:
     return rx.box(
         rx.text(text, weight="bold", font_size="20px"),
-        rx.separator(margin="5px")
+        rx.separator(margin="5px"),
+        
+        margin_top="15px",
+        margin_bottom="15px",
     )
     
 
@@ -136,7 +178,28 @@ def profile() -> rx.Component:
                     rx.box(
                         rx.flex(
                             rx.text("Theme", weight="bold", font_size="20px"),
-                            rx.color_mode.button(style={"width": "70px"}),
+                            rx.box(
+                                rx.segmented_control.root(
+                            rx.segmented_control.item(
+                                rx.icon(tag="monitor", size=20),
+                                value="system",
+                            ),
+                            rx.segmented_control.item(
+                                rx.icon(tag="sun", size=20),
+                                value="light",
+                            ),
+                            rx.segmented_control.item(
+                                rx.icon(tag="moon", size=20),
+                                value="dark",
+                            ),
+                            on_change=set_color_mode,
+                            variant="classic",
+                            radius="large",
+                            value=color_mode,
+                        )
+                                
+                            ),
+                            # rx.color_mode.button(style={"width": "70px"}),
                             
                             justify="between",
                         ),
@@ -170,6 +233,66 @@ def profile() -> rx.Component:
                    
                 # box| settings
                 ),
+                
+                # support
+                rx.box(
+                    segment("Support"),
+                    rx.box(
+                        rx.alert_dialog.root(
+                    rx.alert_dialog.trigger(
+                        rx.button(
+                            f"Send message", 
+                            weight="bold",
+                            font_size="20px",
+                            width="100%",
+                            background=LAZURE
+                        ),
+                    ),
+                    rx.alert_dialog.content(
+                        rx.alert_dialog.title(f"Whats Wrong?"),
+                        rx.alert_dialog.description(
+                            f"Enter your new massage:",
+                        ),
+                        rx.form.root(
+                            rx.flex(
+                                rx.form.field(
+                                    rx.text_area(
+                                        placeholder="Type here...",
+                                        name="support_message"
+                                    ),
+                                ),
+                                rx.alert_dialog.cancel(
+                                    rx.button(
+                                        "Cancel",
+                                        variant="soft", 
+                                        background=RED,
+                                        radius="full",
+                                        color="white"
+                                    ),
+                                ),
+                                rx.alert_dialog.action(
+                                    rx.form.submit(
+                                        rx.button(
+                                            "Send",
+                                            color_scheme="green",
+                                            radius="full",
+                                            width="100%",
+                                        ),
+                                    ),
+                                ),
+                                direction="column",
+                                spacing="3",
+                            ),
+                            on_submit=SendSupport.handle_submit,
+                        ),
+                    ),
+                    # box| alert_dialog
+                    ),
+                
+                ),
+                # box| support
+                ),
+                
 
             # container
             ),

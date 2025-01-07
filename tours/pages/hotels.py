@@ -1,12 +1,22 @@
 import reflex as rx
-
 from rxconfig import config
 
 from ..state import UserData
 
 from ..ui.topbar import topbar
 
-from .tours_list import tour_card            
+from .tours_list import tour_card          
+
+from sqlmodel import select,or_
+from ..database import Tours
+
+
+#* BACKEND
+from ..backend.components.terminal_notofication import terminal_info,terminal_warning  
+
+
+
+
 
 
 # color pallete states
@@ -16,33 +26,25 @@ LAZURE = "#19a6b6"
 DARK_LAZURE = "#012d40"
 
 
-'''
-rx.box(
-    rx.text(f"Hello hotel!{UserData.username}"),
-    rx.text(f"Hello {UserData.mail}"),
-    rx.button(
-        "Login",
-        on_click=lambda: UserData.login,
-        style={"width":"100px", "height":"50px"}
-    ),
-),
-'''
+class ToursDBState(rx.State):
+    # Определяем переменную состояния для хранения списка туров
+    tours: list[Tours] = []
+    is_loading: bool = False
 
 
-"""
-rx.menu.root(  
-    rx.menu.trigger(rx.button("Select")),
-    rx.menu.content(
-        rx.menu.item("Egypt"),
-        rx.menu.item("Russia"),
-        rx.menu.item("USA"),
-        rx.menu.item("Item 2"),
-        rx.menu.item("Item 2"),
-        rx.menu.item("Item 2"),
-    ),
-),
+    @rx.event
+    def get_regular_tours(self) -> list[Tours]:
+        try:
+            with rx.session() as session:
+                query = select(Tours).where(Tours.stars <= 4)
+                self.tours = session.exec(query).all()
+        except Exception as e:
+            terminal_warning(f"[WARNING] Error getting tours from BD (get_regular_tours): {e}")
+        # test
+        terminal_info(f"INFO] SQL Query: {query}")  # Выводим SQL запрос
+        terminal_info(f"[INFO] All Data: {self.tours}")  # Выводим полученные данные
 
-"""
+
 
 class SelectCountry(rx.State):
     values: list[str] = [
@@ -319,20 +321,22 @@ def hotels() -> rx.Component:
                 ),
                 # list of  tours
                 rx.box(
-                    tour_card(
-                        src_img="https://cdn.pegasys.pegast.com/web/ge/cms/Countries/Egypt/About/1.jpg",
-                        text="Egypt",
-                        url_tour="#",
-                        price="$1000",
-                        stars="4",
+                    rx.cond(
+                        ToursDBState.is_loading,
+                        rx.center(rx.spinner()),
+                        rx.foreach(
+                            ToursDBState.tours,
+                            lambda tour: tour_card(
+                                tour=tour,
+                                src_img=tour.src_img,
+                                text=tour.text,
+                                price=tour.price,
+                                stars=tour.stars
+                            )
+                        )
                     ),
-                    tour_card(
-                        src_img="https://cdnn21.img.ria.ru/images/07e8/01/0c/1920984295_0:114:3072:1842_1920x0_80_0_0_ff14c51016cb39e6a1953bd1c6671de4.jpg",
-                        text="Cairo",
-                        url_tour="#",
-                        price="$700",
-                        stars="4",
-                    ),
+                    margin_top="30px",
+                    on_mount=ToursDBState.get_regular_tours  #* call function when page is loaded
                 ),
                 
                 

@@ -1,19 +1,15 @@
 import reflex as rx
 
-from rxconfig import config
 from ..state import UserData
+from sqlmodel import select,or_
+from ..database import Tours
 
 #* BACKEND
-#! IN REALIZE DELETE THIS
 from ..backend.components.terminal_notofication import terminal_info,terminal_warning
 
 class State(rx.State):
     pass
         
-class UserName(UserData):
-    def login(self):
-        username, mail= self.get_user_info()
-        print(f"User info - Name: {username}, Age: {mail}")
             
 
 # color pallete states
@@ -22,10 +18,8 @@ RED = "#ff414d"
 LAZURE = "#19a6b6"
 DARK_LAZURE = "#012d40"
 
-from sqlmodel import select,or_
-from ..database import Tours
 
-import asyncio
+
 
 class ToursDBState(rx.State):
     # Определяем переменную состояния для хранения списка туров
@@ -34,10 +28,10 @@ class ToursDBState(rx.State):
 
 
     @rx.event
-    def get_regular_tours(self) -> list[Tours]:
+    async def get_regular_tours(self) -> list[Tours]:
         try:
             with rx.session() as session:
-                query = select(Tours).where(Tours.stars <= 4)
+                query = select(Tours)
                 self.tours = session.exec(query).all()
         except Exception as e:
             terminal_warning(f"[WARNING] Error getting tours from BD (get_regular_tours): {e}")
@@ -56,33 +50,7 @@ class ToursDBState(rx.State):
             terminal_warning(f"[WARNING] Error getting tours from BD (get_beach_tours): {e}")
            
             
-            
-"""
-FOR DB SESSION
-            with rx.session() as session:
-            query = select(Tours)
-            tours = session.exec(query).all()
-            # Convert to list of dictionaries
-            self.tours = [
-                {
-                    "src_img": tour.src_img,
-                    "text": tour.text,
-                    "url_tour": tour.url_tour, 
-                    "price": tour.price,
-                    "stars": tour.stars
-                }
-                for tour in tours
-            ]
-            print(f'''
-                  \n{self.tours}\n
-            ''')
-            """
 
-
-'''
-rx.text(f"Hello {UserName.username}"),
-rx.text(f"Hello {UserName.mail}"),
-'''
 # ! Make moduls in UI folder
 def filter_card(
         icon: str,
@@ -162,9 +130,9 @@ def ad_card(
     ),
 
 def tour_card(
+    tour: Tours,
     src_img: str,
     text: str,
-    url_tour: str,
     price: str,
     stars: str,
     ) -> rx.Component:
@@ -212,7 +180,7 @@ def tour_card(
             ),
             rx.hstack(
                 rx.text(
-                    f"{price}",
+                    f"${price}",
                     color="#000",
                     position="absolute",
                     top="147px",
@@ -243,7 +211,8 @@ def tour_card(
             
             
         ),
-        url=url_tour
+        href=f"/tour/{tour.id}",
+        is_external=False
     )
 
 def tours_list() -> rx.Component:
@@ -256,7 +225,7 @@ def tours_list() -> rx.Component:
                         rx.box(
                             rx.hstack(
                                 rx.icon(tag="slack",margin="5px",color=RED),
-                                rx.text(f"Hello, {UserName.username}",size="7"),
+                                rx.text(f"Hello, {UserData.username}",size="7"),
                             ),
                             
                         ),
@@ -471,9 +440,9 @@ def tours_list() -> rx.Component:
                         rx.foreach(
                             ToursDBState.tours,
                             lambda tour: tour_card(
+                                tour=tour,
                                 src_img=tour.src_img,
                                 text=tour.text,
-                                url_tour=tour.url_tour,
                                 price=tour.price,
                                 stars=tour.stars
                             )
