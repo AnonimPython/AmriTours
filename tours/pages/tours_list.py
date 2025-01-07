@@ -3,6 +3,10 @@ import reflex as rx
 from rxconfig import config
 from ..state import UserData
 
+#* BACKEND
+#! IN REALIZE DELETE THIS
+from ..backend.components.terminal_notofication import terminal_info,terminal_warning
+
 class State(rx.State):
     pass
         
@@ -36,10 +40,10 @@ class ToursDBState(rx.State):
                 query = select(Tours).where(Tours.stars <= 4)
                 self.tours = session.exec(query).all()
         except Exception as e:
-            print(f"[WARNING] Error getting tours from BD (get_regular_tours): {e}")
+            terminal_warning(f"[WARNING] Error getting tours from BD (get_regular_tours): {e}")
         # test
-        print(f"\033[34m[INFO] SQL запрос: {query}")  # Выводим SQL запрос
-        print(f"[INFO] All Data: {self.tours}")  # Выводим полученные данные
+        terminal_info(f"INFO] SQL запрос: {query}")  # Выводим SQL запрос
+        terminal_info(f"[INFO] All Data: {self.tours}")  # Выводим полученные данные
             
             
     @rx.event
@@ -49,7 +53,7 @@ class ToursDBState(rx.State):
                 query = select(Tours).where(Tours.price == 123)
                 self.tours = session.exec(query).all()
         except Exception as e:
-            print(f"[WARNING] Error getting tours from BD (get_beach_tours): {e}")
+            terminal_warning(f"[WARNING] Error getting tours from BD (get_beach_tours): {e}")
            
             
             
