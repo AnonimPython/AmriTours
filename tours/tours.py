@@ -7,6 +7,7 @@ from rxconfig import config
 # frontend pages
 from .pages.tours_list import tours_list
 from .pages.tour_details import tour_detail
+from .pages.error import error_404
 from .pages.profile import profile
 from .pages.hotels import hotels
 from .pages.register import register
@@ -75,5 +76,9 @@ app = rx.App(
         # accent_color="teal",
     )
 )
+app.add_page(
+    error_404,
+    route="/404",
+    title="404 - Page not found",
+)
 # app.add_page(index)
-# app.add_page(tour_detail)

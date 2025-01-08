@@ -5,6 +5,9 @@ from sqlmodel import select,or_
 from ..database import Tours
 from typing import Optional
 
+from ..pages.error import error_404
+
+
 #* BACKEND
 from ..backend.components.terminal_notofication import terminal_info,terminal_warning
 
@@ -25,7 +28,7 @@ class TourDetailState(rx.State):
             #* .get("pid", 0) - получаем значение параметра pid, если его нет - возвращаем 0
             #* int() - преобразуем строку в число потоскольку id тура в БД str
             tour_id = int(self.router.page.params.get("id", 0))
-            terminal_info("(get_tour_details)==================")
+            # terminal_info("(get_tour_details)==================")
             terminal_info(f"[INFO] tour_id: {tour_id}")
             
             #* Получаем объект тура из базы данных по его id
@@ -40,7 +43,7 @@ class TourDetailState(rx.State):
             
             
 def tour_detail():
-    return rx.container(
+    return rx.box(
             rx.vstack(
             rx.cond(
                 TourDetailState.tour,
@@ -48,9 +51,13 @@ def tour_detail():
                     rx.image(src=TourDetailState.tour.src_img),
                     rx.heading(TourDetailState.tour.text),
                     rx.text(f"Price: ${TourDetailState.tour.price}"),
-                    rx.text(f"Rating: {TourDetailState.tour.stars}")
+                    rx.text(f"Rating: {TourDetailState.tour.stars}"),
+                    rx.text(f"Popular: {TourDetailState.tour.popular}"),
+                    rx.text(f"Beach: {TourDetailState.tour.beach}"),
+                    rx.text(f"Type living: {TourDetailState.tour.type_living}"),
+                    rx.text(f"Meal plan: {TourDetailState.tour.meal_plan}"),
                 ),
-                rx.text("Tour not found")
+                error_404()
             ),
             on_mount=TourDetailState.get_tour_details
         )

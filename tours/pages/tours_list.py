@@ -36,8 +36,8 @@ class ToursDBState(rx.State):
         except Exception as e:
             terminal_warning(f"[WARNING] Error getting tours from BD (get_regular_tours): {e}")
         # test
-        terminal_info(f"INFO] SQL запрос: {query}")  # Выводим SQL запрос
-        terminal_info(f"[INFO] All Data: {self.tours}")  # Выводим полученные данные
+        # terminal_info(f"INFO] SQL запрос: {query}")  # Выводим SQL запрос
+        # terminal_info(f"[INFO] All Data: {self.tours}")  # Выводим полученные данные
             
     
     @rx.event
