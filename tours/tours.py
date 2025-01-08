@@ -56,7 +56,7 @@ def add_tour_page() -> rx.Component:
     return add_tour()
 
 
-@rx.page(route="/tour/[id]")
+@rx.page(route="/tours/[id]")
 def tour_detail_page():
     return tour_detail()
 

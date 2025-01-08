@@ -26,7 +26,7 @@ class ToursDBState(rx.State):
     tours: list[Tours] = []
     is_loading: bool = False
 
-
+    #* All tours in DB
     @rx.event
     async def get_regular_tours(self) -> list[Tours]:
         try:
@@ -39,7 +39,7 @@ class ToursDBState(rx.State):
         terminal_info(f"INFO] SQL запрос: {query}")  # Выводим SQL запрос
         terminal_info(f"[INFO] All Data: {self.tours}")  # Выводим полученные данные
             
-            
+    
     @rx.event
     async def get_beach_tours(self):
         try:
@@ -211,7 +211,7 @@ def tour_card(
             
             
         ),
-        href=f"/tour/{tour.id}",
+        href=f"/tours/{tour.id}",
         is_external=False
     )
 
