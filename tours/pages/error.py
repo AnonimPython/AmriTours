@@ -2,6 +2,7 @@
 import reflex as rx
 
 
+
 def error_404() -> rx.Component:
     return rx.vstack(
         rx.box(

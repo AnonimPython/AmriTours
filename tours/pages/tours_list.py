@@ -25,29 +25,54 @@ class ToursDBState(rx.State):
     # Определяем переменную состояния для хранения списка туров
     tours: list[Tours] = []
     is_loading: bool = False
+    
+    # active button, needs to change background color XD
+    active_button: str = "tours"
 
     #* All tours in DB
     @rx.event
     async def get_regular_tours(self) -> list[Tours]:
+        self.active_button = "tours"
         try:
             with rx.session() as session:
-                query = select(Tours)
+                query = select(Tours).order_by(Tours.id.desc())
                 self.tours = session.exec(query).all()
         except Exception as e:
             terminal_warning(f"[WARNING] Error getting tours from BD (get_regular_tours): {e}")
         # test
-        # terminal_info(f"INFO] SQL запрос: {query}")  # Выводим SQL запрос
-        # terminal_info(f"[INFO] All Data: {self.tours}")  # Выводим полученные данные
+        # terminal_info(f"INFO] SQL query: {query}")  # send SQL query on terminal
+        # terminal_info(f"[INFO] All Data: {self.tours}")  # Show all data in DB to terminal
             
     
     @rx.event
     async def get_beach_tours(self):
+        self.active_button = "beach"
         try:
             with rx.session() as session:
-                query = select(Tours).where(Tours.price == 123)
+                query = select(Tours).where(Tours.beach == True)
                 self.tours = session.exec(query).all()
         except Exception as e:
             terminal_warning(f"[WARNING] Error getting tours from BD (get_beach_tours): {e}")
+            
+    @rx.event
+    async def get_low_price_tours(self):
+        self.active_button = "price_down"
+        try:
+            with rx.session() as session:
+                query = select(Tours).order_by(Tours.price.asc())
+                self.tours = session.exec(query).all()
+        except Exception as e:
+            terminal_warning(f"[WARNING] Error getting tours from BD (get_low_price_tours): {e}")
+    
+    @rx.event
+    async def get_hight_price_tours(self):
+        self.active_button = "price_up"
+        try:
+            with rx.session() as session:
+                query = select(Tours).order_by(Tours.price.desc())
+                self.tours = session.exec(query).all()
+        except Exception as e:
+            terminal_warning(f"[WARNING] Error getting tours from BD (get_hight_price_tours): {e}")
            
             
 
@@ -215,6 +240,35 @@ def tour_card(
         is_external=False
     )
 
+
+def filter_buttons(
+        icon: str,
+        text: str,
+        id_button: str,
+        function_query: str,
+    ):
+    return rx.button(
+        rx.icon(tag=icon),
+        rx.text(text),
+        background=rx.cond(
+            ToursDBState.active_button == id_button,
+            # not selected
+            LAZURE,
+            # selected
+            "#f0f1f5"
+        ),
+        color=rx.cond(
+            ToursDBState.active_button == id_button,
+            # not selected
+            "white",
+            # selected
+            DARK_LAZURE
+        ),
+        border_radius="30px",
+        # * tour
+        on_click=function_query
+    ),
+
 def tours_list() -> rx.Component:
     return rx.box(
         rx.mobile_only(
@@ -377,51 +431,40 @@ def tours_list() -> rx.Component:
                     rx.box(
                         rx.scroll_area(
                             rx.flex(
-                                # ! when your click on button, BG color will change
-                                rx.button(
-                                    rx.icon(tag="tram-front"),
-                                    rx.text("Tours"),
-                                    background=LAZURE,
-                                    border_radius="30px",
-                                    # * tour
-                                    on_click=ToursDBState.get_regular_tours
+                                #* tours
+                                filter_buttons(
+                                    icon="tram-front",
+                                    text="Tours",
+                                    id_button="tours",
+                                    function_query=ToursDBState.get_regular_tours
                                 ),
-                                rx.button(
-                                    rx.icon(tag="tree-palm"),
-                                    rx.text("Beach"),
-                                    background="#f0f1f5",
-                                    color=DARK_LAZURE,
-                                    border_radius="30px",
-                                    # * beach
-                                    on_click=ToursDBState.get_beach_tours
-                                    
+                                #* beach
+                                filter_buttons(
+                                    icon="tree-palm",
+                                    text="Beach",
+                                    id_button="beach",
+                                    function_query=ToursDBState.get_beach_tours
                                 ),
-                                rx.button(
-                                    rx.icon(tag="arrow-down-narrow-wide"),
-                                    rx.text("Price down"),
-                                    background="#f0f1f5",
-                                    color=DARK_LAZURE,
-                                    border_radius="30px",
-                                    # * price down
-                                    
+                                #* Price down
+                                filter_buttons(
+                                    icon="arrow-down-narrow-wide",
+                                    text="Price down",
+                                    id_button="price_down",
+                                    function_query=ToursDBState.get_low_price_tours
                                 ),
-                                rx.button(
-                                    rx.icon(tag="arrow-up-narrow-wide"),
-                                    rx.text("Price up"),
-                                    background="#f0f1f5",
-                                    color=DARK_LAZURE,
-                                    border_radius="30px",
-                                    # * price up
-                                    
+                                #* Price up
+                                filter_buttons(
+                                    icon="arrow-up-narrow-wide",
+                                    text="Price up",
+                                    id_button="price_up",
+                                    function_query=ToursDBState.get_hight_price_tours
                                 ),
-                                rx.button(
-                                    rx.icon(tag="crown"),
-                                    rx.text("Popular"),
-                                    background="#f0f1f5",
-                                    color=DARK_LAZURE,
-                                    border_radius="30px",
-                                    # * popular
-                                    
+                                #* Popular
+                                filter_buttons(
+                                    icon="crown",
+                                    text="Popular",
+                                    id_button="popular",
+                                    function_query=ToursDBState.get_beach_tours
                                 ),
                                 gap="10px",
                             ),
