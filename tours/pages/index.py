@@ -8,29 +8,31 @@ LAZURE = "#19a6b6"
 DARK_LAZURE = "#012d40"
 
 def index() -> rx.Component:
-    return rx.container(
+    return rx.mobile_only(
         # mobile devices 478px
-            rx.mobile_only(
+            rx.box(
             rx.flex(
                 rx.box(
                     rx.text(
-                        "Welcome",
-                        align="center",
-                        as_="div",
-                        size="7",
-                        color=GRAY,
+                        "AmriTours",
+                        color="#000",
+                        position="absolute",
+                        top="40px",
+                        left="0px",
+                        background_color="#ffcb48",
+                        style={
+                            "font-size": "70px",
+                            "font-weight": "bold",
+                            "width": "100%",
+                            "letter-spacing": "10px",
+                            "transform":" rotate(10deg)"
+                        },
                     ),
-                ),
-                rx.box(
-                    rx.text(
-                        "AmricaTours",
-                        align="center",
-                        as_="div",
-                        size="9",
-                        weight="bold",
-                        color=GRAY,
-                        
-                    ),
+                    width="100%",
+                    height="100vh",
+                    position="relative",
+                    overflow="hidden",
+                    
                 ),
                 # Login and Singin btn
                 rx.box(
@@ -83,6 +85,13 @@ def index() -> rx.Component:
             ),
             
         ),
-        background_color=LAZURE,
+        style={
+            "background-image": "url(https://cs13.pikabu.ru/post_img/big/2019/10/29/10/157236514218472865.jpg)",
+            "background-position": "center",
+            "background-size": "cover",
+            "background-repeat": "no-repeat" 
+        },
+        position="relative",
         height="100vh",
+        width="100%",
     )# index

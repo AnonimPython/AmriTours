@@ -109,3 +109,26 @@ rx.alert_dialog.action(
 
 
 
+
+import reflex as rx
+
+class AnimationState(rx.State):
+    is_expanded: bool = False
+
+    def toggle(self):
+        self.is_expanded = not self.is_expanded
+
+def test():
+    return rx.vstack(
+        rx.button(
+            "Toggle",
+            on_click=AnimationState.toggle,
+        ),
+        rx.box(
+            "Content goes here",
+            height=rx.cond(AnimationState.is_expanded, "200px", "0px"),
+            opacity=rx.cond(AnimationState.is_expanded, "1", "0"),
+            overflow="hidden",
+            transition="all 0.3s ease-in-out",  # CSS transition
+        ),
+    )

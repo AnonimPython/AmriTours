@@ -13,7 +13,7 @@ class UserData(rx.State):
     @rx.event
     def check_auth(self):
         if not self.is_authenticated:
-            return rx.redirect("/register")
+            return rx.redirect("/")
         return rx.redirect("/tours")
 
     #* set user data for another files

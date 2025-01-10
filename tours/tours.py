@@ -14,6 +14,7 @@ from .pages.register import register
 from .pages.login import login
 from .pages.index import index
 
+
 #backend pages
 from .backend.add_tour import add_tour
 
@@ -27,7 +28,7 @@ RED = "#ff414d"
 LAZURE = "#19a6b6"
 DARK_LAZURE = "#012d40"
 #*                               in state.py fuction check LocalStorage, if is null -> redirect to register page
-@rx.page(route="/", title="Index", on_load=UserData.check_auth)
+@rx.page(route="/", title="Index", )#on_load=UserData.check_auth
 def index_page() -> rx.Component:
     return index()
     

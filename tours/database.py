@@ -3,6 +3,7 @@ from typing import Optional, List
 from sqlmodel import Field
 from sqlalchemy import JSON, Column
 # reflex db makemigrations && reflex db migrate
+
 #* REGISTER
 class RegisterUser(rx.Model, table=True):
     id: Optional[int] = Field(default=None, primary_key=True)
