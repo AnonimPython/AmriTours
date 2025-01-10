@@ -43,7 +43,6 @@ class ToursDBState(rx.State):
         # terminal_info(f"INFO] SQL query: {query}")  # send SQL query on terminal
         # terminal_info(f"[INFO] All Data: {self.tours}")  # Show all data in DB to terminal
             
-    
     @rx.event
     async def get_beach_tours(self):
         self.active_button = "beach"
@@ -73,6 +72,16 @@ class ToursDBState(rx.State):
                 self.tours = session.exec(query).all()
         except Exception as e:
             terminal_warning(f"[WARNING] Error getting tours from BD (get_hight_price_tours): {e}")
+            
+    @rx.event
+    async def get_popular_tours(self):
+        self.active_button = "popular"
+        try:
+            with rx.session() as session:
+                query = select(Tours).where(Tours.popular == True).order_by(Tours.popular.desc())
+                self.tours = session.exec(query).all()
+        except Exception as e:
+            terminal_warning(f"[WARNING] Error getting tours from BD (get_popular_tours): {e}")
            
             
 
@@ -464,7 +473,7 @@ def tours_list() -> rx.Component:
                                     icon="crown",
                                     text="Popular",
                                     id_button="popular",
-                                    function_query=ToursDBState.get_beach_tours
+                                    function_query=ToursDBState.get_popular_tours
                                 ),
                                 gap="10px",
                             ),
@@ -495,8 +504,7 @@ def tours_list() -> rx.Component:
                     on_mount=ToursDBState.get_regular_tours  #* call function when page is loaded
                 ),
             ), 
-            # navbar()
-            
+
             ),
         
     # hello.py
