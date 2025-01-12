@@ -59,6 +59,8 @@ class AddTourState(rx.State):
                 stars=form_data["stars"],
                 beach=form_data["beach"],
                 type_living=form_data["select"],
+                country=form_data["country"],
+                description=form_data["description"],
                 meal_plan=self.selected_meals
             )
             session.add(new_tour)
@@ -71,6 +73,8 @@ class AddTourState(rx.State):
                 rx.set_value("text", ""),
                 rx.set_value("price", ""),
                 rx.set_value("stars", ""),
+                rx.set_value("country", ""),
+                rx.set_value("description", ""),
             ]
 
 def add_tour():
@@ -82,6 +86,8 @@ def add_tour():
                 rx.input(placeholder="text", name="text",id="text"),
                 rx.input(placeholder="price", name="price",id="price"),
                 rx.input(placeholder="stars", name="stars",id="stars"),
+                rx.input(placeholder="country", name="country",id="country"),
+                rx.input(placeholder="description", name="description",id="description"),
                 # beach
                 rx.box(
                     rx.checkbox(

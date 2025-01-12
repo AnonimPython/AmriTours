@@ -47,7 +47,7 @@ def tour_detail():
             rx.vstack(
             rx.cond(
                 TourDetailState.tour,
-                rx.vstack(
+                rx.box(
                     rx.image(src=TourDetailState.tour.src_img),
                     rx.heading(TourDetailState.tour.text),
                     rx.text(f"Price: ${TourDetailState.tour.price}"),
@@ -56,6 +56,8 @@ def tour_detail():
                     rx.text(f"Beach: {TourDetailState.tour.beach}"),
                     rx.text(f"Type living: {TourDetailState.tour.type_living}"),
                     rx.text(f"Meal plan: {TourDetailState.tour.meal_plan}"),
+                    rx.text(f"Country: {TourDetailState.tour.country}"),
+                    rx.text(f"Description: {TourDetailState.tour.description}"),
                 ),
                 error_404()
             ),

@@ -9,12 +9,20 @@ class UserData(rx.State):
     def is_authenticated(self) -> bool:
         return bool(self.username and self.mail)
 
-    #* redirect to register page if user is not authenticated
+    
     @rx.event
     def check_auth(self):
-        if not self.is_authenticated:
-            return rx.redirect("/")
-        return rx.redirect("/tours")
+        # * take current path (url)
+        current_path = self.router.page.path
+        
+        if self.is_authenticated:
+            #* redirect to register page if user is authenticated
+            if current_path in ["/login", "/register", "/"]:
+                return rx.redirect("/tours")
+        else:
+            #* redirect to register page if user is not authenticated
+            if current_path not in ["/login", "/register", "/"]:
+                return rx.redirect("/")
 
     #* set user data for another files
     def set_user_data(self, username: str, mail: str):

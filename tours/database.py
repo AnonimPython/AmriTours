@@ -17,6 +17,8 @@ class Tours(rx.Model, table=True):
     id: Optional[int] = Field(default=None, primary_key=True)
     src_img: str = Field(default="")
     text: str = Field(default="")
+    country: str = Field(default="")
+    description: str = Field(default="")
     price: int = Field(default=0)
     stars: int = Field(default=0)
     popular: bool = Field(default=False)

@@ -491,6 +491,7 @@ def tours_list() -> rx.Component:
                         rx.center(rx.spinner()),
                         rx.foreach(
                             ToursDBState.tours,
+                            #! remake tour cards and add more info
                             lambda tour: tour_card(
                                 tour=tour,
                                 src_img=tour.src_img,

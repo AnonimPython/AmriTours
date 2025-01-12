@@ -9,89 +9,110 @@ DARK_LAZURE = "#012d40"
 
 def index() -> rx.Component:
     return rx.mobile_only(
-        # mobile devices 478px
-            rx.box(
+        rx.box(
             rx.flex(
                 rx.box(
+                    # rx.icon(tag="plane",color="white"),
                     rx.text(
                         "AmriTours",
-                        color="#000",
-                        position="absolute",
-                        top="40px",
+                        color="#fff",
+                        position="absolute", 
+                        top="20px",
                         left="0px",
-                        background_color="#ffcb48",
                         style={
-                            "font-size": "70px",
+                            "font-size": "50px",
                             "font-weight": "bold",
                             "width": "100%",
-                            "letter-spacing": "10px",
-                            "transform":" rotate(10deg)"
+                            "text-align": "center",
                         },
                     ),
-                    width="100%",
-                    height="100vh",
+                    # height="100vh",
                     position="relative",
-                    overflow="hidden",
-                    
+                    width="100%",
                 ),
-                # Login and Singin btn
+                # Login and Register buttons 
                 rx.box(
                     rx.center(
                         rx.vstack(
+                            rx.box(
+                                rx.text(
+                                    "Travel your dream place",
+                                    color="#fff",
+                                    weight="bold",
+                                    size="5",
+                                    text_align="center",
+                                    margin_bottom="10px",
+                                ),
+                                rx.text(
+                                    "We are the best raited travel agency of 2025 in the world!",
+                                    color="rgb(255,255,255,0.6)",
+                                    weight="bold",
+                                    size="2",
+                                    text_align="center",
+                                    padding="20px 60px",
+                                ),
+                            ),
                             rx.link(
                                 rx.button(
-                                    "Login",
-                                    size="4",
-                                    background_color=DARK_LAZURE,
+                                    rx.text("Get started",weight="bold",),
+                                    size="4", 
+                                    color="#5f3500",
+                                    background_color="#fdc509",
                                     radius="full",
-                                    style={
-                                        "margin-bottom":"50%",
-                                        "padding":"10px 80px",
-                                    }
+                                    width="290px",
                                 ),
-                            href="/login",color=GRAY),
-                            
-                            rx.link(
-                                rx.button(
-                                    "Register",
-                                    size="4",
-                                    background_color=DARK_LAZURE,
-                                    radius="full",
-                                    style={
-                                        "margin-bottom":"50%",
-                                        "padding":"10px 80px",
-                                    }
+                                href="/login",
+                                color=GRAY
+                            ),
+                            rx.hstack(
+                                rx.text("Dont have an account?",color="#fff"),
+                                rx.link(
+                                    "Sing up",
+                                    href="/register",
+                                    color="#fdc509",
+                                    style={"text-decoration": "underline"},
                                 ),
-                                href="/register",color=GRAY
                             ),
                             
+                            spacing="4",
                             align="center",
                         ),
                     ),
-                    style={
-                        "margin-top": "40%",
-                    },
+                    position="absolute",
+                    top="80%",
+                    left="50%",
+                    transform="translate(-50%, -50%)",
+                    padding="15px",
+                    width="400px",
+                    margin_left="0px",
+                    margin_top="0px",
+                    background_color="rgb(45,40,38,0.9)",
+                    border_radius="15px",
                 ),
-                
                 spacing="4",
-                padding="1em",
-                height="100%",
+                padding="1em", 
+                # height="100vh", 
                 direction="column",
                 justify="between",
                 width="100%",
-                
-                
-                
             ),
-            
+            style={
+                "background-image": "url(https://i.pinimg.com/originals/0a/db/29/0adb29a661d427e9a1146a8eff872f1f.jpg)",
+                "background-position": "center",
+                "background-size": "cover", 
+                "background-repeat": "no-repeat",
+                "min-height": "100vh",
+                "margin": "0",         
+                "padding": "0"         
+            },
+            position="relative",
+            height="100vh",
+            width="100%",
+            margin="0px",
+            padding="0px" 
         ),
-        style={
-            "background-image": "url(https://cs13.pikabu.ru/post_img/big/2019/10/29/10/157236514218472865.jpg)",
-            "background-position": "center",
-            "background-size": "cover",
-            "background-repeat": "no-repeat" 
-        },
-        position="relative",
-        height="100vh",
-        width="100%",
-    )# index
+        width="100%",    
+        height="100vh", 
+        margin="0px",   
+        padding="0px"    
+    )
