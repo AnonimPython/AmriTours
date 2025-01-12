@@ -52,13 +52,17 @@ class AddTourState(rx.State):
     @rx.event
     def handle_submit(self, form_data: dict):
         with rx.session() as session:
+            beach_value = form_data.get("beach", False)
             new_tour = Tours(
                 src_img=form_data["src_img"],
                 text=form_data["text"],
                 price=form_data["price"],
                 stars=form_data["stars"],
-                beach=form_data["beach"],
+                beach=beach_value,
                 type_living=form_data["select"],
+                days=form_data["days"],
+                time=form_data["time"],
+                address=form_data["address"],
                 country=form_data["country"],
                 description=form_data["description"],
                 meal_plan=self.selected_meals
@@ -75,6 +79,9 @@ class AddTourState(rx.State):
                 rx.set_value("stars", ""),
                 rx.set_value("country", ""),
                 rx.set_value("description", ""),
+                rx.set_value("days", ""),
+                rx.set_value("time", ""),
+                rx.set_value("address", ""),
             ]
 
 def add_tour():
@@ -87,12 +94,16 @@ def add_tour():
                 rx.input(placeholder="price", name="price",id="price"),
                 rx.input(placeholder="stars", name="stars",id="stars"),
                 rx.input(placeholder="country", name="country",id="country"),
+                rx.input(placeholder="days", name="days",id="days"),
+                rx.input(placeholder="time-time", name="time",id="time"),
+                rx.input(placeholder="address", name="address",id="address"),
                 rx.input(placeholder="description", name="description",id="description"),
                 # beach
                 rx.box(
                     rx.checkbox(
                         name="beach",
                         text="Beach near? (3km)",
+                        default_checked=False,
                     ),
                 ),
                 # select type of tour
