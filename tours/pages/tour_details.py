@@ -27,7 +27,8 @@ class TourDetailState(rx.State):
             #* Получаем id тура из параметров URL
             #* self.router.page.params - словарь с параметрами URL
             #* .get("pid", 0) - получаем значение параметра pid, если его нет - возвращаем 0
-            #* int() - преобразуем строку в число потоскольку id тура в БД str
+            #* int() - преобразуем строку в число потоскольку id тура в БД str 
+                                                                    #! fix
             tour_id = int(self.router.page.params.get("id", 0))
             # terminal_info("(get_tour_details)==================")
             terminal_info(f"[INFO] tour_id: {tour_id}")
@@ -163,7 +164,7 @@ def tour_detail():
                                                 color="gold",
                                                 size=25,
                                                 style={"align-self": "center","align-items": "center"}),
-                                            rx.text(f'{TourDetailState.tour.stars}',size="7")
+                                            rx.text(f'{TourDetailState.tour.stars}',size="6",weight="bold"),
                                         ),
                                         
                                     ),   
@@ -173,11 +174,61 @@ def tour_detail():
                                 ),
                             margin_top="20px",
                         ),
+                        rx.separator(
+                            margin_top="20px",
+                            background_color="rgb(145,145,145,0.5)",
+                            height="1px"
+                        ),
+                        #* type_living | meal_plan | description
+                        rx.box(
+                            #type_living
+                            rx.box(
+                                rx.hstack(
+                                    # ! remake to beauty card (take from main page)
+                                    rx.icon(
+                                        tag="bed",
+                                        color="#919191",
+                                        size=25,
+                                        padding="5px",
+                                        background_color="#d4d4d4",
+                                        border_radius="50%",
+                                    ),
+                                    rx.text(
+                                        f"Type living: {TourDetailState.tour.type_living}",
+                                        weight="regular",
+                                        size="5"
+                                        
+                                    ),
+                                    width="100%",
+                                    style={"align-self": "center","align-items": "center"}
+                                ),
+                            ),
+                            # meal_plan
+                            rx.box(
+                                rx.icon(
+                                    tag="cooking-pot",
+                                    color="#919191",
+                                    size=25,
+                                    padding="5px",
+                                    background_color="#d4d4d4",
+                                    border_radius="50%",
+                                ),
+                                rx.text(
+                                    f"Meal:{TourDetailState.tour.meal_plan}",
+                                    weight="regular",
+                                    size="5"
+                                ),
+                            ),
+                            rx.box(
+                                rx.heading("Description:", weight="bold",margin_bottom="10px",margin_top="10px"),
+                                rx.text(f"Description: {TourDetailState.tour.description}"),
+                            ),
+                        ),
                         # rx.text(f"Popular: {TourDetailState.tour.popular}"),
                         # rx.text(f"Beach: {TourDetailState.tour.beach}"),
-                        rx.text(f"Type living: {TourDetailState.tour.type_living}"),
-                        rx.text(f"Meal plan: {TourDetailState.tour.meal_plan}"),
-                        rx.text(f"Description: {TourDetailState.tour.description}"),
+                        # rx.text(f"Type living: {TourDetailState.tour.type_living}"),
+                        # rx.text(f"Meal plan: {TourDetailState.tour.meal_plan}"),
+                        # rx.text(f"Description: {TourDetailState.tour.description}"),
 
                     ),
                     error_404()
