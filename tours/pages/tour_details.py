@@ -1,18 +1,26 @@
 import reflex as rx
 
+#* DATABASE
 from ..state import UserData
 from sqlmodel import select,or_
 from ..database import Tours
 from typing import Optional
 
+#* PAGES
 from ..pages.error import error_404
 
+#* UI
 from ..ui.topbar import topbar
+from ..ui.colored_card import colored_card
 
 #* BACKEND
 from ..backend.components.terminal_notofication import terminal_info,terminal_warning
 
-
+# color pallete states
+GRAY = "#daecf2"
+RED = "#ff414d"
+LAZURE = "#19a6b6"
+DARK_LAZURE = "#012d40"
 
 class TourDetailState(rx.State):
     #* Определяем переменную состояния tour типа Tours или None
@@ -152,9 +160,10 @@ def tour_detail():
                                             size="5"
                                             
                                         ),
-                                        width="100%",
-                                        style={"align-self": "center","align-items": "center"}
+                                        style={"align-self": "center","align-items": "center"},
+                                        width="100%"
                                         ),
+                                        width="60%",
                                     ),
                                     # stars
                                     rx.box(
@@ -162,11 +171,13 @@ def tour_detail():
                                             rx.icon(
                                                 tag="star",
                                                 color="gold",
-                                                size=25,
-                                                style={"align-self": "center","align-items": "center"}),
-                                            rx.text(f'{TourDetailState.tour.stars}',size="6",weight="bold"),
+                                                style={"align-self": "center","align-items": "center"},
+                                                
+                                            ),
+                                            rx.text(f"{TourDetailState.tour.stars}",size="5"),
                                         ),
                                         
+                                    # box stars   
                                     ),   
                                     justify="between",
                                 ),
@@ -181,56 +192,123 @@ def tour_detail():
                         ),
                         #* type_living | meal_plan | description
                         rx.box(
-                            #type_living
-                            rx.box(
-                                rx.hstack(
-                                    # ! remake to beauty card (take from main page)
-                                    rx.icon(
-                                        tag="bed",
-                                        color="#919191",
-                                        size=25,
-                                        padding="5px",
-                                        background_color="#d4d4d4",
-                                        border_radius="50%",
+                        rx.tabs.root(
+                            rx.tabs.list(
+                                rx.tabs.trigger(
+                                    rx.text("More",size="6",weight="bold"), 
+                                    value="tab1",
+                                    color_scheme="yellow",
+                                    margin_left="10px",
+                                ),
+                                rx.tabs.trigger(
+                                    rx.text("Decription",size="6",weight="bold"), 
+                                    value="tab2",
+                                    color_scheme="yellow",
+                                ),
+
+                            ),
+                            rx.tabs.content(
+                                rx.box(
+                                rx.flex(
+                                
+                                #type_living
+                                rx.box(
+                                    colored_card(
+                                        icon="bed",
+                                        text=f"\n{TourDetailState.tour.type_living}\n",
+                                        bgcolor="#dffbf2",
+                                        icon_color="#32edaf",
+                                        id_box="sales-id",
+                                        url="#",
+                                        width="100%",
+
+                                        # height= "140px",
+                                         
                                     ),
-                                    rx.text(
-                                        f"Type living: {TourDetailState.tour.type_living}",
-                                        weight="regular",
-                                        size="5"
+                                    width="40%",
+                                    
+                                ),
+                                # meal_plan
+                                rx.box(
+                                    colored_card(
+                                        icon="cooking-pot",
+                                        text=rx.box(
+                                            rx.foreach(
+                                                TourDetailState.tour.meal_plan,
+                                                lambda meal: rx.text(meal, margin_bottom="0.5em")
+                                            ),
+                                        ),
+                                        bgcolor="#fef2ed",
+                                        icon_color="#fd714c",
+                                        id_box="sales-id",
+                                        url="#",
+                                        width="100%",
+                                        height= "140px",
                                         
                                     ),
+                                    # background_color="#fef2ed",
                                     width="100%",
-                                    style={"align-self": "center","align-items": "center"}
+                                    
                                 ),
-                            ),
-                            # meal_plan
-                            rx.box(
-                                rx.icon(
-                                    tag="cooking-pot",
-                                    color="#919191",
-                                    size=25,
-                                    padding="5px",
-                                    background_color="#d4d4d4",
-                                    border_radius="50%",
-                                ),
-                                rx.text(
-                                    f"Meal:{TourDetailState.tour.meal_plan}",
-                                    weight="regular",
-                                    size="5"
-                                ),
-                            ),
-                            rx.box(
-                                rx.heading("Description:", weight="bold",margin_bottom="10px",margin_top="10px"),
-                                rx.text(f"Description: {TourDetailState.tour.description}"),
-                            ),
-                        ),
-                        # rx.text(f"Popular: {TourDetailState.tour.popular}"),
-                        # rx.text(f"Beach: {TourDetailState.tour.beach}"),
-                        # rx.text(f"Type living: {TourDetailState.tour.type_living}"),
-                        # rx.text(f"Meal plan: {TourDetailState.tour.meal_plan}"),
-                        # rx.text(f"Description: {TourDetailState.tour.description}"),
 
+                            gap="10px",
+                            justify="between",
+                            margin_top="20px",
+                            width="100%",
+                            # flex tab1
+                            ),
+                                ),
+                                value="tab1",
+                            
+                            # tab content tab1
+                            ),
+                            
+                            rx.tabs.content(
+                                # description
+                                rx.box(
+                                    rx.scroll_area(
+                                        rx.text(f"Description: {TourDetailState.tour.description}"),
+                                        type="always",
+                                        scrollbars="vertical",
+                                    ),
+                                    margin_top="20px",
+                                    height="167px",
+                                ),
+                                
+                                value="tab2",
+                            # tab content tab1
+                            ),
+                        
+                            margin_top="10px",
+                            default_value="tab1",
+                            style={
+                                ".rt-BaseTabList": {
+                                    "justify_content": "center",
+                                    "box-shadow": "none",
+                                }
+                            }
+                        # tab root 
+                        ),
+                        # box tab.root
+                        ),
+                        # book tour button
+                        rx.button(
+                            rx.text("Book tour",size="5",weight="bold"),
+                            style={
+                                "position": "fixed",
+                                "bottom": "20px",
+                                "left": "50%",
+                                "width": "80%", 
+                                "max-width": "500px",
+                                "transform": "translateX(-50%)",
+                                "margin": "0 auto",
+                                "padding": "1.5em",
+                                "border-radius": "30px",
+                                "background-color": LAZURE,
+                            }
+                        )
                     ),
+                    
                     error_404()
                 ),
                 on_mount=TourDetailState.get_tour_details

@@ -4,6 +4,8 @@ from ..state import UserData
 from sqlmodel import select,or_
 from ..database import Tours
 
+from ..ui.colored_card import colored_card
+
 #* BACKEND
 from ..backend.components.terminal_notofication import terminal_info,terminal_warning
 
@@ -86,41 +88,7 @@ class ToursDBState(rx.State):
             
 
 # ! Make moduls in UI folder
-def filter_card(
-        icon: str,
-        text: str,
-        bgcolor: str,
-        icon_color: str,
-        id_box: str,
-        url: str
-    ) -> rx.Component:
-    return rx.link(
-        rx.box(
-            rx.vstack(
-                rx.icon(tag=icon,color=icon_color),
-                rx.text(text, size="3",color="black"),
-                align="center",
-                justify="center",
-                height="100%",
-                width="100%",
-                spacing="2",
-            ),
-            id=id_box,
-            style={
-                "align_self": "center",
-                "display": "flex",
-                "align_items": "center",
-                "justify_content": "center",
-                "background-color": bgcolor,
-                # "border": f"2px {border_color} solid",
-                "border-radius":"10px",
-                "height":"90px",
-                "width":"90px",
-            },
-        ),
-        href=url,
-        style={"text_decoration": "none"},
-    )
+
 
 
 def ad_card(
@@ -345,7 +313,7 @@ def tours_list() -> rx.Component:
                     rx.scroll_area(
                         rx.flex(
                             # hotel
-                            filter_card(
+                            colored_card(
                                 icon="bed-double",
                                 text="Tours",
                                 bgcolor="#fff7ee",
@@ -354,7 +322,7 @@ def tours_list() -> rx.Component:
                                 url="/hotels",
                             ),
                             # flight
-                            filter_card(
+                            colored_card(
                                 icon="plane",
                                 text="Planes",
                                 bgcolor="#ecf5f8",
@@ -363,7 +331,7 @@ def tours_list() -> rx.Component:
                                 url="#",
                             ),
                             # journal
-                            filter_card(
+                            colored_card(
                                 icon="book-heart",
                                 text="Journal",
                                 bgcolor="#fef2ed",
@@ -372,7 +340,7 @@ def tours_list() -> rx.Component:
                                 url="#",
                             ),
                             # attractions
-                            filter_card(
+                            colored_card(
                                 icon="award",
                                 text="Attractions",
                                 bgcolor="#fcf5e8",
@@ -381,7 +349,7 @@ def tours_list() -> rx.Component:
                                 url="#",
                             ),
                             # sales
-                            filter_card(
+                            colored_card(
                                 icon="percent",
                                 text="Sales",
                                 bgcolor="#dffbf2",
