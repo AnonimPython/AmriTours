@@ -7,6 +7,7 @@ from rxconfig import config
 # frontend pages
 from .pages.tours_list import tours_list
 from .pages.tour_details import tour_detail
+from .pages.planes import planes
 from .pages.error import error_404
 from .pages.profile import profile
 from .pages.hotels import hotels
@@ -53,7 +54,11 @@ def profile_page() -> rx.Component:
 def hotels_page() -> rx.Component:
     return hotels()
 
-@rx.page(route="/add_tour", title="add_tour")
+@rx.page(route="/planes", title="Planes")
+def planes_page() -> rx.Component:
+    return planes()
+
+@rx.page(route="/add_tour", title="Add tour")
 def add_tour_page() -> rx.Component:
     return add_tour()
 

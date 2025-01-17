@@ -321,7 +321,7 @@ def tours_list() -> rx.Component:
                                 bgcolor="#ecf5f8",
                                 icon_color="#3d9ae9",
                                 id_box="flight-id",
-                                url="#",
+                                url="/planes",
                             ),
                             # journal
                             colored_card(
