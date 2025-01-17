@@ -10,7 +10,7 @@ from typing import Optional
 from ..pages.error import error_404
 
 #* UI
-from ..ui.topbar import topbar
+from ..ui.topbar import topbar,topbar_details
 from ..ui.colored_card import colored_card
 
 #* BACKEND
@@ -55,7 +55,7 @@ class TourDetailState(rx.State):
 def tour_detail():
     return rx.box(
             rx.container(
-            topbar("Let's go!"),
+            topbar_details("Let's go!"),
                 rx.vstack(
                 rx.cond(
                     TourDetailState.tour,
@@ -267,7 +267,7 @@ def tour_detail():
                                 # description
                                 rx.box(
                                     rx.scroll_area(
-                                        rx.text(f"Description: {TourDetailState.tour.description}"),
+                                        rx.text(f"{TourDetailState.tour.description}"),
                                         type="always",
                                         scrollbars="vertical",
                                     ),

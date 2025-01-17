@@ -36,7 +36,7 @@ class ToursDBState(rx.State):
     def get_regular_tours(self) -> list[Tours]:
         try:
             with rx.session() as session:
-                query = select(Tours).where(Tours.stars <= 4)
+                query = select(Tours)
                 self.tours = session.exec(query).all()
         except Exception as e:
             terminal_warning(f"[WARNING] Error getting tours from BD (get_regular_tours): {e}")
@@ -326,6 +326,7 @@ def hotels() -> rx.Component:
                         rx.center(rx.spinner()),
                         rx.foreach(
                             ToursDBState.tours,
+                            #! remake tour cards and add more info
                             lambda tour: tour_card(
                                 tour=tour,
                                 src_img=tour.src_img,

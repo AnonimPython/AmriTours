@@ -130,7 +130,7 @@ def ad_card(
         
         id=id_ad_card
     ),
-
+# ! REFACTORE STYLE!
 def tour_card(
     tour: Tours,
     src_img: str,
@@ -264,7 +264,10 @@ def tours_list() -> rx.Component:
                         rx.link(
                             rx.icon(tag="user", margin="5px",color=RED),
                             href="/profile",
-                            style={"background-color":"#f4f3f7", "border-radius":"50%","padding":"2px"},
+                            style=rx.color_mode_cond(
+                            light={"background":"#f4f3f7", "padding":"2px", "border-radius":"50%"},
+                            dark={"background":"#2d3748", "padding":"2px", "border-radius":"50%"}
+                        ),
                            
                         ),
                         justify="between",
@@ -289,19 +292,9 @@ def tours_list() -> rx.Component:
                             size="3",
                             style={
                                 "border-radius":"30px",
-                                "width":"90%",
+                                "width":"100%",
                                 "height":"50px",
                                 "--text-field-focus-color":LAZURE,
-                            },
-                        ),
-                        rx.button(
-                            rx.icon(tag="settings-2"),
-                            style={
-                                "margin-left":"10px",
-                                "border-radius":"50%",
-                                "padding":"17px 6px",
-                                "align-self":"center",
-                                "background-color":RED,
                             },
                         ),
                     ),
