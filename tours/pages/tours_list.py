@@ -330,7 +330,7 @@ def tours_list() -> rx.Component:
                                 bgcolor="#fef2ed",
                                 icon_color="#fd714c",
                                 id_box="journal-id",
-                                url="#",
+                                url="/journal",
                             ),
                             # attractions
                             colored_card(

@@ -157,7 +157,7 @@ def planes() -> rx.Component:
             rx.container(
                 
                 topbar("Planes"),
-                
+                rx.text("Dont touch"),
                 # filter
                 rx.box(
                     rx.alert_dialog.root(
